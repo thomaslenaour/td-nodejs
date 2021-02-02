@@ -1,0 +1,20 @@
+{
+  "name": "td-nodejs",
+  "version": "1.0.0",
+  "description": "TD Node.js",
+  "main": "index.js",
+  "repository": "https://github.com/thomaslenaour/td-nodejs.git",
+  "author": "Thomas Le Naour <lenaourthomas@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "express": "^4.17.1",
+    "prettier": "^2.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
