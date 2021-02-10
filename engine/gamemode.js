@@ -1,3 +1,5 @@
+const { check } = require('prettier')
+
 class GameMode {
   constructor(players) {
     if (this.constructor === GameMode) {
@@ -9,14 +11,21 @@ class GameMode {
     }
 
     this.players = players
-    this.targets = Array.from({ length: 21 }, (_, i) => i + 1)
-    this.firstPlayer = this.players[
-      Math.floor(Math.random() * this.players.length)
-    ]
+    // this.firstPlayer = this.players[
+    //   Math.floor(Math.random() * this.players.length)
+    // ]
   }
 
-  getFirstPlayer() {
-    return this.firstPlayer
+  // getFirstPlayer() {
+  //   return this.firstPlayer
+  // }
+
+  checkWin(player) {
+    return player.win
+  }
+
+  arrowShot() {
+    throw new Error('You should define arrowShot method in your class')
   }
 }
 
