@@ -1,15 +1,33 @@
 const GameMode = require('../gamemode')
 
 class AroundTheWorld extends GameMode {
-  constructor(players) {
-    super(players)
+  constructor(name) {
+    super(name)
   }
 
-  checkWin() {
-    for (let i = 0; i < this.players.length; i++) {
-      if (this.players[i].scores === 20) {
-        return this.players[i]
-      }
+  startGame() {
+    this.status = 'started'
+  }
+
+  shot(sector) {
+    if (this.status !== 'started') {
+      throw new Error('Vous devez lancer la partie avant de pouvoir jouer')
+    }
+
+    if (sector === this.currentPlayer.score + 1) {
+      this.currentPlayer.score++
+    }
+
+    if (this.checkWin(this.currentPlayer)) {
+      this.currentPlayer.rank = this.rankCounter++
+    }
+
+    this.setCurrentPlayer(this.currentPlayer.order++)
+  }
+
+  checkWin(currentPlayer) {
+    if (currentPlayer.score === 20) {
+      return true
     }
 
     return false
