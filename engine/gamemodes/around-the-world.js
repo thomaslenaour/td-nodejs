@@ -19,10 +19,11 @@ class AroundTheWorld extends GameMode {
     }
 
     if (this.checkWin(this.currentPlayer)) {
-      this.currentPlayer.rank = this.rankCounter++
+      this.currentPlayer.rank = this.rankCounter + 1
+      this.rankCounter++
     }
 
-    this.setCurrentPlayer(this.currentPlayer.order++)
+    this.setCurrentPlayer(this.currentPlayer.order + 1)
   }
 
   checkWin(currentPlayer) {
