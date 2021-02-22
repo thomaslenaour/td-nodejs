@@ -1,4 +1,5 @@
 const AroundTheWorld = require('./gamemodes/around-the-world')
+const ThreeHundredAndOne = require('./gamemodes/301')
 
 const players = [
   {
@@ -6,7 +7,7 @@ const players = [
     playerId: 1,
     gameId: 1,
     remainingShots: null,
-    score: 19,
+    score: 20,
     rank: null,
     order: null,
     inGame: true,
@@ -17,7 +18,7 @@ const players = [
     playerId: 2,
     gameId: 1,
     remainingShots: null,
-    score: 19,
+    score: 20,
     rank: null,
     order: null,
     inGame: true,
@@ -28,7 +29,7 @@ const players = [
     playerId: 3,
     gameId: 1,
     remainingShots: null,
-    score: 19,
+    score: 20,
     rank: null,
     order: null,
     inGame: true,
@@ -36,12 +37,16 @@ const players = [
   },
 ]
 
-const myGameMode = new AroundTheWorld('Partie 1')
+const myGameMode = new ThreeHundredAndOne('Partie 1')
 
 myGameMode.addPlayer(players[0])
 myGameMode.addPlayer(players[1])
 myGameMode.addPlayer(players[2])
 myGameMode.setPlayersOrder()
 myGameMode.startGame()
-myGameMode.shot(20)
-myGameMode.shot(20)
+
+myGameMode.shot(10, 2)
+myGameMode.shot(20, 1)
+myGameMode.shot(18, 3)
+
+console.log(myGameMode.gamePlayers)

@@ -12,6 +12,10 @@ class GameMode {
     this.rankCounter = 0
   }
 
+  startGame() {
+    this.status = 'started'
+  }
+
   addPlayer(newPlayer) {
     if (this.status !== 'draft') {
       throw new Error(
@@ -38,7 +42,7 @@ class GameMode {
     throw new Error('Cette méthode doit être implémentée dans la classe enfant')
   }
 
-  checkWin(currentPlayer) {
+  checkWin() {
     throw new Error('Cette méthode doit être implémentée dans la classe enfant')
   }
 
@@ -63,18 +67,26 @@ class GameMode {
     )
 
     if (currentPlayer.rank !== null) this.setCurrentPlayer(orderNumber + 1)
-    
+
     this.currentPlayer = currentPlayer
   }
 
   isFinished() {
-    const isFinished = this.gamePlayers.filter((player) => player.rank === null).length === 1 ? true : false
+    const isFinished =
+      this.gamePlayers.filter((player) => player.rank === null).length === 1
 
-    if (isFinished) this.gamePlayers.find((player) => player.rank === null).rank = this.gamePlayers.length
-    
+    if (isFinished)
+      this.gamePlayers.find(
+        (player) => player.rank === null
+      ).rank = this.gamePlayers.length
+
     return isFinished
   }
 
+  isStarted() {
+    if (this.status !== 'started')
+      throw new Error('Vous devez lancer la partie avant de pouvoir jouer')
+  }
 }
 
 module.exports = GameMode
