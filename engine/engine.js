@@ -6,7 +6,7 @@ const players = [
     playerId: 1,
     gameId: 1,
     remainingShots: null,
-    score: 0,
+    score: 19,
     rank: null,
     order: null,
     inGame: true,
@@ -17,7 +17,7 @@ const players = [
     playerId: 2,
     gameId: 1,
     remainingShots: null,
-    score: 0,
+    score: 19,
     rank: null,
     order: null,
     inGame: true,
@@ -28,7 +28,7 @@ const players = [
     playerId: 3,
     gameId: 1,
     remainingShots: null,
-    score: 0,
+    score: 19,
     rank: null,
     order: null,
     inGame: true,
@@ -41,7 +41,7 @@ const myGameMode = new AroundTheWorld('Partie 1')
 myGameMode.addPlayer(players[0])
 myGameMode.addPlayer(players[1])
 myGameMode.addPlayer(players[2])
-
 myGameMode.setPlayersOrder()
-
 myGameMode.startGame()
+myGameMode.shot(20)
+myGameMode.shot(20)

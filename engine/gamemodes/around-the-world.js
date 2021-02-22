@@ -19,19 +19,21 @@ class AroundTheWorld extends GameMode {
     }
 
     if (this.checkWin(this.currentPlayer)) {
-      this.currentPlayer.rank = this.rankCounter + 1
       this.rankCounter++
+      this.currentPlayer.rank = this.rankCounter
+    }
+
+    if(this.isFinished()) {
+      console.log(`La partie est terminée, voici le résultat final :`)
+      console.log(this.gamePlayers)
+      process.exit(0)
     }
 
     this.setCurrentPlayer(this.currentPlayer.order + 1)
   }
 
   checkWin(currentPlayer) {
-    if (currentPlayer.score === 20) {
-      return true
-    }
-
-    return false
+    return currentPlayer.score === 20 ? true : false
   }
 }
 

@@ -38,6 +38,10 @@ class GameMode {
     throw new Error('Cette méthode doit être implémentée dans la classe enfant')
   }
 
+  checkWin(currentPlayer) {
+    throw new Error('Cette méthode doit être implémentée dans la classe enfant')
+  }
+
   setPlayersOrder() {
     const orders = [...Array(this.gamePlayers.length).keys()].sort(
       () => Math.random() - 0.5
@@ -54,10 +58,23 @@ class GameMode {
   setCurrentPlayer(orderNumber) {
     if (orderNumber === this.gamePlayers.length) orderNumber = 0
 
-    this.currentPlayer = this.gamePlayers.find(
+    const currentPlayer = this.gamePlayers.find(
       (player) => player.order === orderNumber
     )
+
+    if (currentPlayer.rank !== null) this.setCurrentPlayer(orderNumber + 1)
+    
+    this.currentPlayer = currentPlayer
   }
+
+  isFinished() {
+    const isFinished = this.gamePlayers.filter((player) => player.rank === null).length === 1 ? true : false
+
+    if (isFinished) this.gamePlayers.find((player) => player.rank === null).rank = this.gamePlayers.length
+    
+    return isFinished
+  }
+
 }
 
 module.exports = GameMode
