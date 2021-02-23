@@ -6,6 +6,7 @@ const HttpError = require('./models/http-error')
 const app = express()
 
 const gameRoutes = require('./routers/game')
+const playerRoutes = require('./routers/player')
 
 app.set('view engine', 'hbs')
 app.use(express.json())
@@ -31,6 +32,7 @@ app.get('/', (req, res, next) => {
   })
 })
 app.use('/games', gameRoutes)
+app.use('/players', playerRoutes)
 
 app.use((req, res, next) => {
   throw new HttpError("La route n'existe pas", 404)
