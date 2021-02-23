@@ -4,9 +4,7 @@ const gameController = require('../controllers/game')
 
 // PREFIX /games
 router.get('/', gameController.showGames)
-router.get('/new', (req, res, next) => {
-  console.log('GET /games/new')
-})
+router.get('/new', gameController.showGamesNew)
 router.post('/', (req, res, next) => {
   console.log('POST /games')
 })
