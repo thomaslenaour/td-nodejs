@@ -3,7 +3,7 @@ const GameMode = require('../gamemode')
 class ThreeHundredAndOne extends GameMode {
   constructor(name) {
     super(name)
-    this.sector = Array.from({ length: 20 }, (_, i) => i + 1).concat([25, 50])
+    this.sector = [...Array(20).keys()].concat([25, 50])
   }
 
   shot(sector, multiplier) {
