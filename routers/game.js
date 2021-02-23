@@ -1,9 +1,9 @@
 const router = require('express').Router()
 
-// prefix /games
-router.get('/', (req, res, next) => {
-  console.log('GET /games')
-})
+const gameController = require('../controllers/game')
+
+// PREFIX /games
+router.get('/', gameController.showGames)
 router.get('/new', (req, res, next) => {
   console.log('GET /games/new')
 })
