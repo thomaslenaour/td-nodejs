@@ -5,11 +5,11 @@ const showGames = async (req, res, next) => {
 
   res.format({
     json: () => res.json({ games }),
-    html: () => res.render('games', { games }),
+    html: () => res.render('games/index', { games }),
   })
 }
 
-const showGamesNew = async (req, res, next) => {
+const showGameNew = async (req, res, next) => {
   res.format({
     json: () => next(new HttpError('NOT_API_AVAILABLE', 406)),
     html: () => res.render('games/new'),
@@ -33,6 +33,14 @@ const showGame = async (req, res, next) => {
   })
 }
 
+const showGameEdit = async (req, res, next) => {
+  res.format({
+    json: () => next(new HttpError('NOT_API_AVAILABLE', 406)),
+    html: () => res.render('games/edit'),
+  })
+}
+
 exports.showGames = showGames
-exports.showGamesNew = showGamesNew
+exports.showGameNew = showGameNew
 exports.showGame = showGame
+exports.showGameEdit = showGameEdit
