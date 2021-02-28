@@ -10,9 +10,9 @@ router.post(
   [body('name').not().isEmpty(), body('email').normalizeEmail().isEmail()],
   playerController.createPlayer
 )
-router.get('/new', playerController.showPlayersNew)
-router.get('/:id', playerController.showPlayer)
-router.get('/:id/edit', playerController.showPlayerEdit)
+router.get('/new', playerController.showPlayerForm)
+router.get('/:id', playerController.getPlayer)
+router.get('/:id/edit', playerController.showPlayerForm)
 router.patch('/:id', (req, res, next) => {
   console.log('PATCH /players/{id}')
 })

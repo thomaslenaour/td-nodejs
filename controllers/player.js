@@ -33,26 +33,37 @@ const createPlayer = async (req, res, next) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return next(new HttpError('Les données saisies sont invalides', 422))
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Les données saisies sont invalides',
+            'UNPROCESSABLE_ENTITY',
+            422
+          )
+        ),
+      html: () => res.redirect(302, 'players/new'),
+    })
   }
 
   const { name, email } = req.body
 
-  const createdPlayer = new Player({
-    name,
-    email,
-  })
+  const createdPlayer = new Player({ name, email })
 
   try {
     await createdPlayer.save()
   } catch (error) {
-    return next(
-      new HttpError(
-        "Impossible d'ajouter un nouveau joueur pour le moment",
-        'SERVEUR_ERROR',
-        500
-      )
-    )
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            "Impossible d'ajouter un nouveau joueur pour le moment",
+            'SERVEUR_ERROR',
+            500
+          )
+        ),
+      html: () => res.redirect(302, 'players/new'),
+    })
   }
 
   return res.format({
@@ -61,38 +72,53 @@ const createPlayer = async (req, res, next) => {
   })
 }
 
-const showPlayersNew = async (req, res, next) => {
-  res.format({
-    json: () =>
-      next(
-        new HttpError(
-          "Cette route n'est pas disponible",
-          'NOT_API_AVAILABLE',
-          406
-        )
-      ),
-    html: () => res.render('players/new'),
-  })
-}
+const getPlayer = async (req, res, next) => {
+  const { id } = req.params
 
-const showPlayer = async (req, res, next) => {
-  const player = {
-    id: 1,
-    name: 'Thomas',
-    email: 'thomas.lenaour@ynov.com',
-    gameWin: 10,
-    gameLost: 3,
-    createdAt: new Date(),
+  let player
+  try {
+    player = await Player.findById(id)
+  } catch (err) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            "Impossible de récupérer l'utilisateur pour le moment",
+            'NOT_FOUND',
+            404
+          )
+        ),
+      html: () => res.redirect(302, '/games'),
+    })
   }
 
-  res.format({
+  return res.format({
     json: () => res.json({ player }),
-    html: () => res.render('players/show', { player }),
+    html: () => res.redirect(302, `/players/${id}/edit`),
   })
 }
 
-const showPlayerEdit = async (req, res, next) => {
-  res.format({
+const showPlayerForm = async (req, res, next) => {
+  const { id } = req.params
+
+  let player
+  try {
+    player = await Player.findById(id)
+  } catch (err) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            "Impossible de récupérer l'utilisateur pour le moment",
+            'SERVEUR_ERROR',
+            404
+          )
+        ),
+      html: () => res.redirect(302, '/games'),
+    })
+  }
+
+  return res.format({
     json: () =>
       next(
         new HttpError(
@@ -101,12 +127,14 @@ const showPlayerEdit = async (req, res, next) => {
           406
         )
       ),
-    html: () => res.render('players/edit'),
+    html: () =>
+      res.render('players/form-player', {
+        player: player ? player.toObject({ getters: true }) : null,
+      }),
   })
 }
 
 exports.showPlayers = showPlayers
 exports.createPlayer = createPlayer
-exports.showPlayersNew = showPlayersNew
-exports.showPlayer = showPlayer
-exports.showPlayerEdit = showPlayerEdit
+exports.getPlayer = getPlayer
+exports.showPlayerForm = showPlayerForm
