@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
+const hbs = require('hbs')
 
 const HttpError = require('./models/http-error')
 
@@ -10,6 +11,9 @@ const gameRoutes = require('./routers/game')
 const playerRoutes = require('./routers/player')
 
 app.set('view engine', 'hbs')
+hbs.registerHelper('javascripts', function (options) {
+  return options.fn(this)
+})
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

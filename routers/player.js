@@ -14,7 +14,7 @@ router.get('/new', playerController.showPlayerForm)
 router.get('/:id', playerController.getPlayer)
 router.get('/:id/edit', playerController.showPlayerForm)
 router.patch('/:id', (req, res, next) => {
-  console.log('PATCH /players/{id}')
+  console.log(req.body)
 })
 router.delete('/:id', (req, res, next) => {
   console.log('DELETE /players/{id}')
