@@ -13,9 +13,11 @@ router.post(
 router.get('/new', playerController.showPlayerForm)
 router.get('/:id', playerController.getPlayer)
 router.get('/:id/edit', playerController.showPlayerForm)
-router.patch('/:id', (req, res, next) => {
-  console.log(req.body)
-})
+router.patch(
+  '/:id',
+  [body('name').not().isEmpty(), body('email').normalizeEmail().isEmail()],
+  playerController.updateUser
+)
 router.delete('/:id', (req, res, next) => {
   console.log('DELETE /players/{id}')
 })
