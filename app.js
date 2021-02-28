@@ -11,6 +11,7 @@ const playerRoutes = require('./routers/player')
 
 app.set('view engine', 'hbs')
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')))
 
@@ -28,15 +29,22 @@ app.use((req, res, next) => {
 // Endpoints
 app.get('/', (req, res, next) => {
   return res.format({
-    json: () => next(new HttpError('API_NOT_AVAILABLE', 406)),
-    html: () => res.redirect('/games', 301),
+    json: () =>
+      next(
+        new HttpError(
+          "Cette route n'est pas disponible",
+          'API_NOT_AVAILABLE',
+          406
+        )
+      ),
+    html: () => res.redirect(301, '/games'),
   })
 })
 app.use('/games', gameRoutes)
 app.use('/players', playerRoutes)
 
 app.use((req, res, next) => {
-  throw new HttpError("La route n'existe pas", 404)
+  throw new HttpError("La route n'existe pas", 'NOT_FOUND', 404)
 })
 
 app.use((error, req, res, next) => {
@@ -44,11 +52,15 @@ app.use((error, req, res, next) => {
     return next(error)
   }
 
-  return res
-    .status(error.code || 500)
-    .json({ message: error.message || 'An unknown error occured!' })
+  return res.status(error.code || 500).json({
+    error: {
+      type: error.type || 'UNKNOWN_TYPE',
+      message: error.message || 'Une erreur inconnue est survenue !',
+    },
+  })
 })
 
+mongoose.set('useCreateIndex', true)
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@dart-game-cluster.bryxd.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,

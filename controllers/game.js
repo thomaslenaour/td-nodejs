@@ -11,7 +11,14 @@ const showGames = async (req, res, next) => {
 
 const showGameNew = async (req, res, next) => {
   res.format({
-    json: () => next(new HttpError('NOT_API_AVAILABLE', 406)),
+    json: () =>
+      next(
+        new HttpError(
+          "Cette route n'est pas disponible",
+          'NOT_API_AVAILABLE',
+          406
+        )
+      ),
     html: () => res.render('games/new'),
   })
 }
@@ -35,7 +42,14 @@ const showGame = async (req, res, next) => {
 
 const showGameEdit = async (req, res, next) => {
   res.format({
-    json: () => next(new HttpError('NOT_API_AVAILABLE', 406)),
+    json: () =>
+      next(
+        new HttpError(
+          "Cette route n'est pas disponible",
+          'NOT_API_AVAILABLE',
+          406
+        )
+      ),
     html: () => res.render('games/edit'),
   })
 }

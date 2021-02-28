@@ -9,14 +9,35 @@
     </head>
 
     <body>
-        <header>
-            Header here
+        <header class="bg-indigo-500 text-white py-5">
+            <div class="main-container">
+                <nav class="flex items-center justify-between">
+                    <span class="text-4xl font-bold">Dart</span>
+
+                    <ul class="flex items-center space-x-10">
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                        <li>
+                            <a href="#">Link</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </header>
 
-        {{{ body }}}
+        <main class="my-10">
+            {{{ body }}}
+        </main>
 
-        <footer>
-            Footer here
+        <footer class="bg-indigo-900 text-white py-10">
+            <div class="main-container">
+                <p class="text-center">TD Node.js</p>
+                <p class="text-center">Alex Boisseau & Thomas Le Naour</p>
+            </div>
         </footer>
     </body>
 </html>

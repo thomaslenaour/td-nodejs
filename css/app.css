@@ -2,3 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind screens;
+
+.main-container {
+  @apply 2xl:container 2xl:mx-auto lg:px-10 px-5;
+}
+
+h1 {
+  @apply text-3xl font-bold;
+}
+
+label {
+  @apply font-medium mb-1;
+}
+
+input {
+  @apply border border-gray-200 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:border-indigo-500;
+}
