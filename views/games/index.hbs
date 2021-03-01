@@ -1,5 +1,25 @@
 <section>
     <div class="main-container">
-        
+        <h1 class="mb-5">Dart Game</h1>
+
+        <div class="grid grid-cols-5 gap-6">
+            {{#each games}}
+                <div class="border-2 border-black rounded-md p-4">
+                    <span class="text-2xl font-medium">{{this.name}}</span>
+                    <span class="text-gray-400 block text-xs">#{{this.id}}</span>
+                    <p>Mode : {{this.mode}}</p>
+
+                    <div>
+                        <div class="flex items-center space-x-2 text-sm tracking-tight">
+                            <a href="#" class="hover:text-indigo-500">Modifier</a>
+                            <a href="#" class="hover:text-indigo-500">Supprimer</a>
+                            <a href="#" class="hover:text-indigo-500">+ Ajouter joueur</a>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <p class="col-span-5">Aucune partie pour le moment. <a href="/games/new" class="text-indigo-500">Créer une partie</a></p>
+            {{/each}}
+        </div>
     </div>
 </section>

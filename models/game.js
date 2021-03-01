@@ -7,6 +7,12 @@ const gameSchema = new mongoose.Schema({
     required: true,
   },
   name: { type: String, required: true },
+  status: {
+    type: String,
+    enum: ['draft', 'started', 'ended'],
+    required: true,
+    default: 'draft',
+  },
   currentPlayerId: {
     type: mongoose.Types.ObjectId,
     ref: 'Player',

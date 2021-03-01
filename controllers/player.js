@@ -26,7 +26,10 @@ const showPlayers = async (req, res, next) => {
       res.json({
         players: players.map((player) => player.toObject({ getters: true })),
       }),
-    html: () => res.render('players/index', { players }),
+    html: () =>
+      res.render('players/index', {
+        players: players.map((player) => player.toObject({ getters: true })),
+      }),
   })
 }
 
