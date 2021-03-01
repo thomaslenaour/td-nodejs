@@ -26,7 +26,7 @@ router.delete('/:id', (req, res, next) => {
   console.log('DELETE /games/{id}')
 })
 
-router.use('/:id', gamePlayerRoutes)
-router.use('/:id', shotRoutes)
+router.use('/', gamePlayerRoutes)
+router.use('/', shotRoutes)
 
 module.exports = router

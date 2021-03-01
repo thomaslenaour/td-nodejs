@@ -16,6 +16,7 @@ const gamePlayerSchema = new mongoose.Schema({
   rank: { type: Number, default: null },
   order: { type: Number, default: null },
   inGame: { type: Boolean, default: true, required: true },
+  createdAt: { type: Number, required: true },
 })
 
 module.exports = mongoose.model('GamePlayer', gamePlayerSchema)

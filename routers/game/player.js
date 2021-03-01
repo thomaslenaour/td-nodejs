@@ -1,14 +1,19 @@
 const router = require('express').Router()
+const { body } = require('express-validator')
 
 const gamePlayerController = require('../../controllers/gamePlayer')
 
-// PREFIX /games/:id
-router.get('/players', gamePlayerController.showGamePlayers)
-router.post('/players', (req, res, next) => {
-  console.log('POST /games/{id}/players')
-})
-router.delete('/players', (req, res, next) => {
-  console.log('DELETE /games/{id}/players')
-})
+// PREFIX /games
+router.get('/:id/players', gamePlayerController.showGamePlayers)
+router.post(
+  '/:id/players',
+  [body('players').not().isEmpty()],
+  gamePlayerController.createGamePlayer
+)
+router.delete(
+  '/:id/players',
+  [body('players').not().isEmpty()],
+  gamePlayerController.deleteGamePlayer
+)
 
 module.exports = router

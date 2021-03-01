@@ -1,1 +1,63 @@
-<h1>Vue Game Players</h1>
+<section>
+    <div class="main-container">
+        <h1 class="mb-5">Liste des joueurs</h1>
+
+        <h2 class="font-bold text-2xl mb-5">Supprimer des joueurs</h2>
+        <form id="form-gameplayer-delete" action="/games/{{game.id}}/players" method="POST" class="mb-5">
+            {{#each playersInGame}}
+                <div class="flex items-center mb-3 pb-3 border-b">
+                    <input type="checkbox" name="players-delete" value="{{this.playerId.id}}" id="player-{{this.playerId.name}}" class="mr-2" />
+                    <label for="player-{{this.playerId.name}}">{{this.playerId.name}}</label>
+                </div>
+            {{/each}}
+
+            <button class="text-lg bg-red-500 hover:bg-red-600 font-bold tracking-wide rounded-md px-3 py-2 w-full text-white text-center">
+                Supprimer les joueurs
+            </button>
+        </form>
+
+        <h2 class="font-bold text-2xl mb-5">Ajouter des joueurs</h2>
+        <form action="/games/{{game.id}}/players" method="POST">
+            {{#each availablePlayers}}
+                <div class="flex items-center mb-3 pb-3 border-b">
+                    <input type="checkbox" name="players" value="{{this.id}}" id="player-{{this.name}}" class="mr-2" />
+                    <label for="player-{{this.name}}">{{this.name}}</label>
+                </div>
+            {{/each}}
+
+            <button class="text-lg bg-green-500 hover:bg-green-600 font-bold tracking-wide rounded-md px-3 py-2 w-full text-white text-center">
+                Ajouter les joueurs
+            </button>
+        </form>
+    </div>
+</section>
+
+{{#javascripts}}
+    <script>
+        const deletePlayers = async (gameId, ids) => {
+            let response
+            try {
+                response = await fetch(`/games/${gameId}/players?${new URLSearchParams(ids)}`, {
+                    method: 'DELETE',
+                })
+            } catch (error) {
+                console.error(error)
+            }
+            return response.ok ? true : false
+        }
+
+        const gamePlayerDeleteForm = document.getElementById('form-gameplayer-delete');
+        
+        gamePlayerDeleteForm.addEventListener('submit', (event) => {
+            event.preventDefault()
+
+            let checkedValues = []
+            let ids = document.querySelectorAll('input[name=players-delete]:checked')
+            for (let i = 0; i < ids.length; i++) {
+                checkedValues.push(ids[i].value)
+            }
+
+            console.log(checkedValues)
+        })
+    </script>
+{{/javascripts}}
