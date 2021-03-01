@@ -10,10 +10,6 @@ router.post(
   [body('players').not().isEmpty()],
   gamePlayerController.createGamePlayer
 )
-router.delete(
-  '/:id/players',
-  [body('players').not().isEmpty()],
-  gamePlayerController.deleteGamePlayer
-)
+router.delete('/:gameId/players', gamePlayerController.deleteGamePlayer)
 
 module.exports = router

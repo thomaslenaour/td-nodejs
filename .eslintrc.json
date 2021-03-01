@@ -18,6 +18,7 @@
     "class-methods-use-this": "off",
     "no-useless-constructor": "off",
     "no-plusplus": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "no-underscore-dangle": "off"
   }
 }

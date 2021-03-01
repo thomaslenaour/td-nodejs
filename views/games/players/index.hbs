@@ -37,7 +37,7 @@
         const deletePlayers = async (gameId, ids) => {
             let response
             try {
-                response = await fetch(`/games/${gameId}/players?${new URLSearchParams(ids)}`, {
+                response = await fetch(`/games/${gameId}/players?${ids}`, {
                     method: 'DELETE',
                 })
             } catch (error) {
@@ -51,13 +51,17 @@
         gamePlayerDeleteForm.addEventListener('submit', (event) => {
             event.preventDefault()
 
-            let checkedValues = []
+            let queryParams = ''
             let ids = document.querySelectorAll('input[name=players-delete]:checked')
             for (let i = 0; i < ids.length; i++) {
-                checkedValues.push(ids[i].value)
+                queryParams += `id=${ids[i].value}${i === ids.length - 1 ? '' : '&'}`
             }
 
-            console.log(checkedValues)
+            deletePlayers('{{game.id}}', queryParams)
+                .then(response => {
+                    location.reload()
+                })
+                .catch(response => console.error('Erreur lors de la requête'))
         })
     </script>
 {{/javascripts}}

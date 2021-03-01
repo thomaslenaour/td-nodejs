@@ -44,9 +44,13 @@ const showGamePlayers = async (req, res, next) => {
     })
   }
 
-  let availablePlayers
+  const idsPlayersInGame = playersInGame.map((player) =>
+    player.playerId._id.toString()
+  )
+
+  let allPlayers
   try {
-    availablePlayers = await Player.find()
+    allPlayers = await Player.find()
   } catch (error) {
     return res.format({
       json: () =>
@@ -59,6 +63,13 @@ const showGamePlayers = async (req, res, next) => {
         ),
       html: () => res.render('players/new'),
     })
+  }
+
+  let availablePlayers = allPlayers
+  if (idsPlayersInGame.length > 0) {
+    availablePlayers = allPlayers.filter(
+      (player) => !idsPlayersInGame.includes(player._id.toString())
+    )
   }
 
   return res.format({
@@ -177,27 +188,14 @@ const createGamePlayer = async (req, res, next) => {
 }
 
 const deleteGamePlayer = async (req, res, next) => {
-  const errors = validationResult(req)
-
-  if (!errors.isEmpty()) {
-    return res.format({
-      json: () =>
-        next(
-          new HttpError(
-            'Les données saisies sont invalides',
-            'UNPROCESSABLE_ENTITY',
-            422
-          )
-        ),
-      html: () => res.redirect(302, '/games'),
-    })
-  }
-
-  const { id } = req.params
+  const idsToDelete = Array.isArray(req.query.id)
+    ? req.query.id
+    : [req.query.id]
+  const { gameId } = req.params
 
   let game
   try {
-    game = await Game.findById(id)
+    game = await Game.findById(gameId)
   } catch (err) {
     return res.format({
       json: () =>
@@ -222,12 +220,12 @@ const deleteGamePlayer = async (req, res, next) => {
             422
           )
         ),
-      html: () => res.redirect(302, `/games/${id}`),
+      html: () => res.redirect(302, `/games/${gameId}`),
     })
   }
 
   try {
-    await GamePlayer.deleteMany()
+    await GamePlayer.deleteMany({ playerId: { $in: idsToDelete } })
   } catch (error) {
     return res.format({
       json: () =>
@@ -243,8 +241,8 @@ const deleteGamePlayer = async (req, res, next) => {
   }
 
   return res.format({
-    json: () => res.status(204),
-    html: () => res.redirect(302, `/games/${id}/players`),
+    json: () => res.status(204).json(),
+    html: () => res.redirect(302, `/games/${gameId}/players`),
   })
 }
 
