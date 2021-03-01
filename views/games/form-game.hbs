@@ -1,0 +1,78 @@
+<section>
+    <div class="main-container">
+        {{#if game}}
+        Modification de la partie : {{game.name}}
+        {{else}}
+        Création d'une nouvelle partie
+        {{/if}}
+
+        <form id="form-game" action="/games{{#if game}}/{{game.id}}{{/if}}" method="POST" class="text-sm">
+            <div class="flex flex-col mb-3">
+                <label for="name">Nom</label>
+                <input type="text" name="name" placeholder="Nom"{{#if game}} value="{{game.name}}"{{/if}}>
+            </div>
+            <div class="flex flex-col mb-3">
+                <label for="mode">Mode de jeu</label>
+                <select name="mode" id="mode" required>
+                    <option value="around-the-world" {{#ifEquals game.mode 'around-the-world'}}selected{{/ifEquals}}>Around The World</option>
+                    <option value="301" {{#ifEquals game.mode '301'}}selected{{/ifEquals}}>301</option>
+                    <option value="cricket" {{#ifEquals game.mode 'cricket'}}selected{{/ifEquals}}>Cricket</option>
+                </select>
+            </div>
+            {{#if game}}
+                <div class="flex flex-col mb-3">
+                    <label for="mode">Statut</label>
+                    <select name="status" id="status" required>
+                        <option value="draft" {{#ifEquals game.status 'draft'}}selected{{/ifEquals}}>En cours de création</option>
+                        <option value="started" {{#ifEquals game.status 'started'}}selected{{/ifEquals}}>Commencée</option>
+                        <option value="ended" {{#ifEquals game.status 'ended'}}selected{{/ifEquals}}>Terminée</option>
+                    </select>
+                </div>
+            {{/if}}
+            <button class="text-lg bg-gray-900 hover:bg-black font-bold tracking-wide rounded-md px-3 py-2 w-full text-white text-center">
+                Valider
+            </button>
+        </form>
+    </div>
+</section>
+
+{{#if game}}
+    {{#javascripts}}
+        <script>
+            const updateGame = async (id, objectRequest) => {
+                let response
+
+                try {
+                    response = await fetch(`/games/${id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(objectRequest)
+                    });
+                } catch (error) {
+                    console.error(error)
+                }
+                return response.ok ? true : false
+            }
+
+            const gameForm = document.getElementById('form-game');
+            
+            gameForm.addEventListener('submit', (event) => {
+                event.preventDefault()
+
+                const objectRequest = {
+                    name: document.getElementsByName('name')[0].value,
+                    mode: document.getElementsByName('mode')[0].value,
+                    status: document.getElementsByName('status')[0].value
+                }
+
+                const isOk = updateGame('{{game.id}}', objectRequest)
+                    .then(response => {
+                        location.href = "http://localhost:5000/games/"
+                    })
+                    .catch(response => console.error('Erreur lors de la requête'))
+            })
+        </script>
+    {{/javascripts}}
+{{/if}}

@@ -14,6 +14,9 @@ app.set('view engine', 'hbs')
 hbs.registerHelper('javascripts', function (options) {
   return options.fn(this)
 })
+hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
+  return arg1 === arg2 ? options.fn(this) : options.inverse(this)
+})
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

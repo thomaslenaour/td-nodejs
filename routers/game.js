@@ -8,7 +8,7 @@ const gameController = require('../controllers/game')
 
 // PREFIX /games
 router.get('/', gameController.showGames)
-router.get('/new', gameController.showGameNew)
+router.get('/new', gameController.showGameForm)
 router.post(
   '/',
   [
@@ -18,10 +18,16 @@ router.post(
   gameController.createGame
 )
 router.get('/:id', gameController.showGame)
-router.get('/:id/edit', gameController.showGameEdit)
-router.patch('/:id', (req, res, next) => {
-  console.log('PATCH /games/{id}')
-})
+router.get('/:id/edit', gameController.showGameForm)
+router.patch(
+  '/:id',
+  [
+    body('name').not().isEmpty(),
+    body('mode').isIn(['around-the-world', '301', 'cricket']),
+    body('status').isIn(['started', 'draft', 'ended']),
+  ],
+  gameController.updateGame
+)
 router.delete('/:id', (req, res, next) => {
   console.log('DELETE /games/{id}')
 })
