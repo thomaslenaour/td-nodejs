@@ -1,0 +1,33 @@
+<section>
+    <div class="main-container">
+        <h1 class="mb-5">Liste des joueurs</h1>
+        <div class="grid grid-cols-5 gap-6">
+            {{#each players}}
+                <div class="border-2 border-black rounded-md p-4">
+                    <span class="text-2xl font-medium">{{this.name}}</span>
+                    <span class="text-gray-400 block text-xs">#{{this.id}}</span>
+
+                    <div class="my-2">
+                        <div class="flex items-center space-x-2 text-xs text-white">
+                            <div class="bg-red-500 px-2 py-1 rounded-md">
+                                {{this.gameLost}} gagnées
+                            </div>
+                            <div class="bg-green-500 px-2 py-1 rounded-md">
+                                {{this.gameWin}} perdues
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center space-x-2 text-sm tracking-tight">
+                            <a href="/players/{{this.id}}/edit" class="hover:text-indigo-500">Modifier</a>
+                            <a href="#" class="hover:text-indigo-500">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <p class="col-span-5">Aucun joueur pour le moment. <a href="/players/new" class="text-indigo-500">Créer un joueur</a></p>
+            {{/each}}
+        </div>
+    </div>
+</section>

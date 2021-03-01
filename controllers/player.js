@@ -4,28 +4,29 @@ const HttpError = require('../models/http-error')
 const Player = require('../models/player')
 
 const showPlayers = async (req, res, next) => {
-  const players = [
-    {
-      id: 1,
-      name: 'Thomas',
-      email: 'thomas.lenaour@ynov.com',
-      gameWin: 10,
-      gameLost: 3,
-      createdAt: new Date(),
-    },
-    {
-      id: 2,
-      name: 'Alex',
-      email: 'alex.boisseau@ynov.com',
-      gameWin: 7,
-      gameLost: 19,
-      createdAt: new Date(),
-    },
-  ]
+  let players
+  try {
+    players = await Player.find()
+  } catch (error) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Impossible de récupérer les données des joueurs',
+            'NOT_FOUND',
+            404
+          )
+        ),
+      html: () => res.render('players/index', { players }),
+    })
+  }
 
-  res.format({
-    json: () => res.json({ players }),
-    html: () => res.render('players/players', { players }),
+  return res.format({
+    json: () =>
+      res.json({
+        players: players.map((player) => player.toObject({ getters: true })),
+      }),
+    html: () => res.render('players/index', { players }),
   })
 }
 
