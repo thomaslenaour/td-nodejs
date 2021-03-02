@@ -1,8 +1,8 @@
 const { validationResult } = require('express-validator')
 
-const { Mongoose } = require('mongoose')
 const HttpError = require('../models/http-error')
 const Game = require('../models/game')
+const GamePlayer = require('../models/gamePlayer')
 
 const showGames = async (req, res, next) => {
   let games
@@ -91,7 +91,7 @@ const updateGame = async (req, res, next) => {
             422
           )
         ),
-      html: () => res.redirect(302, 'players/new'),
+      html: () => res.redirect(302, '/games'),
     })
   }
 
@@ -109,25 +109,7 @@ const updateGame = async (req, res, next) => {
     })
   }
 
-  if (game.status === 'started') {
-    console.log('Il n’est plus possible de modifier cette partie')
-    return res.format({
-      json: () =>
-        next(
-          new HttpError(
-            'Il n’est plus possible de modifier cette partie',
-            'GAME_NOT_EDITABLE',
-            410
-          )
-        ),
-      html: () => res.redirect(302, 'players/new'),
-    })
-  }
-
-  if (
-    (game.status === 'started' || game.status === 'ended') &&
-    status === 'started'
-  ) {
+  if (game.status !== 'draft' && status === 'started') {
     return res.format({
       json: () =>
         next(
@@ -137,7 +119,48 @@ const updateGame = async (req, res, next) => {
             422
           )
         ),
-      html: () => res.redirect(302, 'players/new'),
+      html: () => res.redirect(302, '/games'),
+    })
+  }
+
+  if (game.status !== 'draft') {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Il n’est plus possible de modifier cette partie',
+            'GAME_NOT_EDITABLE',
+            410
+          )
+        ),
+      html: () => res.redirect(302, '/games'),
+    })
+  }
+
+  let playersInGame
+  try {
+    playersInGame = await GamePlayer.find({ gameId: id })
+      .populate('playerId')
+      .select('playerId -_id')
+  } catch (error) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Impossible de récupérer les données des joueurs',
+            'NOT_FOUND',
+            404
+          )
+        ),
+      html: () => res.render('players/new'),
+    })
+  }
+
+  if (playersInGame.length < 2) {
+    return res.format({
+      json: () =>
+        next(new HttpError('Pas assez de joueurs', 'GAME_PLAYER_MISSING', 422)),
+      html: () => res.redirect(302, '/games'),
     })
   }
 
@@ -158,8 +181,9 @@ const updateGame = async (req, res, next) => {
   }
 
   return res.format({
-    json: () => res.status(200).json({ game }),
-    html: () => res.redirect(302, '/games'),
+    json: () =>
+      res.status(200).json({ game: game.toObject({ getters: true }) }),
+    html: () => res.redirect(302, `/games/${game._id}`),
   })
 }
 

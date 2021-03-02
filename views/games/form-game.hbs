@@ -69,7 +69,7 @@
 
                 const isOk = updateGame('{{game.id}}', objectRequest)
                     .then(response => {
-                        location.href = "http://localhost:5000/games/"
+                        location.href = `/games`
                     })
                     .catch(response => console.error('Erreur lors de la requête'))
             })

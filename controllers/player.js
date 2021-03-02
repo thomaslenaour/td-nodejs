@@ -71,8 +71,11 @@ const createPlayer = async (req, res, next) => {
   }
 
   return res.format({
-    json: () => res.status(201).json({ player: createdPlayer }),
-    html: () => res.redirect(302, '/players/players'),
+    json: () =>
+      res
+        .status(201)
+        .json({ player: createdPlayer.toObject({ getters: true }) }),
+    html: () => res.redirect(302, `/players/${createdPlayer._id}`),
   })
 }
 

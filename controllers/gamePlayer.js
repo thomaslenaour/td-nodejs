@@ -75,7 +75,7 @@ const showGamePlayers = async (req, res, next) => {
   return res.format({
     json: () =>
       res.json({
-        players: availablePlayers.map((player) =>
+        players: playersInGame.map((player) =>
           player.toObject({ getters: true })
         ),
       }),
@@ -215,8 +215,8 @@ const deleteGamePlayer = async (req, res, next) => {
       json: () =>
         next(
           new HttpError(
-            "Impossible d'ajouter des joueurs, la partie est déjà en cours",
-            'PLAYERS_NOT_ADDABLE_GAME_STARTED',
+            'Impossible de supprimer des joueurs, la partie est terminée',
+            'PLAYERS_NOT_REMOVABLE_GAME_STARTED',
             422
           )
         ),
