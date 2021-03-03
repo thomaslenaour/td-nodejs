@@ -188,19 +188,51 @@ const updateGame = async (req, res, next) => {
 }
 
 const showGame = async (req, res, next) => {
-  const game = {
-    id: 1,
-    mode: 'around-the-world',
-    name: 'partie 1',
-    currentPlayerId: 1,
-    status: 'draft',
-    createdAt: Date.now(),
-    enginePayload: {},
+  const { id } = req.params
+
+  let game
+  try {
+    game = await Game.findById(id)
+  } catch (err) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Impossible de récupérer la partie pour le moment',
+            'SERVEUR_ERROR',
+            404
+          )
+        ),
+      html: () => res.redirect(302, '/games'),
+    })
   }
 
-  res.format({
-    json: () => res.json({ game }),
-    html: () => res.render('games/show'),
+  let playersInGame
+  try {
+    playersInGame = await GamePlayer.find({ gameId: id }).populate('playerId')
+  } catch (error) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Impossible de récupérer les données des joueurs',
+            'NOT_FOUND',
+            404
+          )
+        ),
+      html: () => res.render('players/new'),
+    })
+  }
+
+  return res.format({
+    json: () => res.json({ game: game.toObject({ getters: true }) }),
+    html: () =>
+      res.render('games/show', {
+        game: game.toObject({ getters: true }),
+        players: playersInGame.map((player) =>
+          player.toObject({ getters: true })
+        ),
+      }),
   })
 }
 

@@ -5,15 +5,14 @@
         <div class="grid grid-cols-5 gap-6">
             {{#each games}}
                 <div class="border-2 border-black rounded-md p-4">
-                    <span class="text-2xl font-medium">{{this.name}}</span>
+                    <a href="/games/{{this.id}}" class="text-2xl font-medium text-indigo-500">{{this.name}}</a>
                     <span class="text-gray-400 block text-xs">#{{this.id}}</span>
                     <p>Mode : {{this.mode}}</p>
 
                     <div>
                         <div class="flex items-center space-x-2 text-sm tracking-tight">
-                            <a href="#" class="hover:text-indigo-500">Modifier</a>
+                            <a href="/games/{{this.id}}/edit" class="hover:text-indigo-500">Modifier</a>
                             <a href="#" class="hover:text-indigo-500">Supprimer</a>
-                            <a href="/games/{{this.id}}/players" class="hover:text-indigo-500">+ Ajouter joueur</a>
                         </div>
                     </div>
                 </div>
