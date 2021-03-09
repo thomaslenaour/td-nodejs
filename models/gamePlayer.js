@@ -11,7 +11,7 @@ const gamePlayerSchema = new mongoose.Schema({
     ref: 'Game',
     required: true,
   },
-  remainingShots: { type: Number, default: 3 },
+  remainingShots: { type: Number, required: true, default: 3 },
   score: { type: Number, required: true },
   rank: { type: Number, default: null },
   order: { type: Number, default: null },

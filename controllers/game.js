@@ -1,8 +1,11 @@
 const { validationResult } = require('express-validator')
 
 const HttpError = require('../models/http-error')
+const Player = require('../models/player')
 const Game = require('../models/game')
 const GamePlayer = require('../models/gamePlayer')
+const AroundTheWorld = require('../engine/gamemodes/around-the-world')
+const ThreeHundredAndOne = require('../engine/gamemodes/301')
 
 const showGames = async (req, res, next) => {
   let games
@@ -140,8 +143,6 @@ const updateGame = async (req, res, next) => {
   let playersInGame
   try {
     playersInGame = await GamePlayer.find({ gameId: id })
-      .populate('playerId')
-      .select('playerId -_id')
   } catch (error) {
     return res.format({
       json: () =>
@@ -168,6 +169,46 @@ const updateGame = async (req, res, next) => {
   game.mode = mode
   game.status = status
 
+  if (game.status === 'started') {
+    let currentGame
+    switch (game.mode) {
+      case 'around-the-world':
+        currentGame = new AroundTheWorld(game.name)
+        break
+      case '301':
+        currentGame = new ThreeHundredAndOne(game.name)
+        break
+      default:
+        currentGame = null
+        break
+    }
+
+    playersInGame.forEach((player) => {
+      currentGame.addPlayer(player.toObject({ getters: true }))
+    })
+
+    currentGame.setPlayersOrder()
+
+    currentGame.gamePlayers.forEach(async (gamePlayer) => {
+      let currentGamePlayer
+      try {
+        currentGamePlayer = await GamePlayer.findById(gamePlayer.id)
+      } catch (err) {
+        console.error(err)
+      }
+
+      currentGamePlayer.order = gamePlayer.order
+
+      try {
+        await currentGamePlayer.save()
+      } catch (err) {
+        console.error(err)
+      }
+    })
+
+    game.currentPlayerId = currentGame.currentPlayer.id
+  }
+
   try {
     await game.save()
   } catch (err) {
@@ -192,7 +233,13 @@ const showGame = async (req, res, next) => {
 
   let game
   try {
-    game = await Game.findById(id)
+    game = await Game.findById(id).populate({
+      path: 'currentPlayerId',
+      populate: {
+        path: 'playerId',
+        mode: 'Player',
+      },
+    })
   } catch (err) {
     return res.format({
       json: () =>

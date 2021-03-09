@@ -6,8 +6,8 @@ const players = [
     id: 1,
     playerId: 1,
     gameId: 1,
-    remainingShots: null,
-    score: 20,
+    remainingShots: 3,
+    score: 301,
     rank: null,
     order: null,
     inGame: true,
@@ -17,8 +17,8 @@ const players = [
     id: 2,
     playerId: 2,
     gameId: 1,
-    remainingShots: null,
-    score: 20,
+    remainingShots: 3,
+    score: 301,
     rank: null,
     order: null,
     inGame: true,
@@ -28,8 +28,8 @@ const players = [
     id: 3,
     playerId: 3,
     gameId: 1,
-    remainingShots: null,
-    score: 20,
+    remainingShots: 3,
+    score: 301,
     rank: null,
     order: null,
     inGame: true,
@@ -46,7 +46,8 @@ myGameMode.setPlayersOrder()
 myGameMode.startGame()
 
 myGameMode.shot(10, 2)
-myGameMode.shot(20, 1)
 myGameMode.shot(18, 3)
+myGameMode.shot(10, 1)
+myGameMode.shot(10, 1)
 
 console.log(myGameMode.gamePlayers)

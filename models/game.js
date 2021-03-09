@@ -15,7 +15,7 @@ const gameSchema = new mongoose.Schema({
   },
   currentPlayerId: {
     type: mongoose.Types.ObjectId,
-    ref: 'Player',
+    ref: 'GamePlayer',
     default: null,
   },
 })

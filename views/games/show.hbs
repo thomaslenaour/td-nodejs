@@ -99,12 +99,15 @@
                 <h2 class="font-bold text-2xl mb-5">Joueurs</h2>
                 <ul class="list-disc list-inside{{#ifEquals game.status 'draft'}} mb-5{{/ifEquals}}">
                     {{#each players}}
-                        <li>{{this.playerId.name}}
-                            {{!-- {{#ifEquals game.currentPlayerId this.playerId.id }} <span class="italic">({{this.remainingShot}} coups restants</span>{{/ifEquals}} --}}
-                        </li>
+                        <li>{{this.playerId.name}}</li>
                     {{/each}}
                 </ul>
                 {{#ifEquals game.status 'draft'}}<a href="/games/{{game.id}}/players" class="text-indigo-500">Ajouter / Supprimer des joueurs</a>{{/ifEquals}}
+                {{#ifEquals game.status 'started'}}
+                    <h2 class="font-medium text-xl mt-10">
+                        C'est au joueur <a href="/players/{{game.currentPlayerId.id}}" class="text-indigo-500">{{game.currentPlayerId.playerId.name}}</a> de jouer. Il lui reste <span class="text-indigo-500">{{game.currentPlayerId.remainingShots}}</span> coups
+                    </h2>
+                {{/ifEquals}}
             </div>
         </div>
     </div>

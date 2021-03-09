@@ -66,7 +66,9 @@ class GameMode {
       (player) => player.order === orderNumber
     )
 
-    if (currentPlayer.rank !== null) this.setCurrentPlayer(orderNumber + 1)
+    if (currentPlayer.rank !== null) {
+      this.setCurrentPlayer(orderNumber + 1)
+    }
 
     this.currentPlayer = currentPlayer
   }
