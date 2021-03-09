@@ -1,7 +1,7 @@
 const GameMode = require('../gamemode')
 
 class AroundTheWorld extends GameMode {
-  shot(sector) {
+  shot(sector, multiplicator) {
     this.isStarted()
 
     if (sector === this.currentPlayer.score + 1) {
@@ -11,18 +11,19 @@ class AroundTheWorld extends GameMode {
     if (this.checkWin(this.currentPlayer)) {
       this.rankCounter++
       this.currentPlayer.rank = this.rankCounter
+      this.currentPlayer.inGame = false
     }
 
     if (this.isFinished()) {
-      console.log(`La partie est terminée, voici le résultat final :`)
-      console.log(this.gamePlayers)
-      process.exit(0)
+      this.status = 'ended'
     }
 
-    this.currentPlayer.remainingShots--
-    if (this.currentPlayer.remainingShots === 0) {
-      this.currentPlayer.remainingShots = 3
-      this.setCurrentPlayer(this.currentPlayer.order + 1)
+    if (!this.isFinished) {
+      this.currentPlayer.remainingShots--
+      if (this.currentPlayer.remainingShots === 0) {
+        this.currentPlayer.remainingShots = 3
+        this.setCurrentPlayer(this.currentPlayer.order + 1)
+      }
     }
   }
 
