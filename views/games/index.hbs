@@ -12,7 +12,7 @@
                     <div>
                         <div class="flex items-center space-x-2 text-sm tracking-tight">
                             <a href="/games/{{this.id}}/edit" class="hover:text-indigo-500">Modifier</a>
-                            <a href="#" class="hover:text-indigo-500">Supprimer</a>
+                            <button data-id="{{this.id}}" class="hover:text-indigo-500 delete-game-button">Supprimer</button>
                         </div>
                     </div>
                 </div>
@@ -22,3 +22,35 @@
         </div>
     </div>
 </section>
+
+<script>
+
+    const deleteGame = async (id) => {
+        let response
+
+        try {
+            response = await fetch(`/games/${id}`, {
+                method: 'DELETE'
+            });
+        } catch (error) {
+            console.error(error)
+        }
+        return response.ok ? true : false
+    }
+
+    const deleteButtons = document.querySelectorAll('.delete-game-button');
+
+    deleteButtons.forEach((deleteButton) => {
+
+        deleteButton.addEventListener('click', (event) => {
+            event.preventDefault()
+
+            deleteGame(deleteButton.dataset.id)
+            .then(response => {location.href = `/games`})
+            .catch(response => console.error('Erreur lors de la requête'))
+        })
+
+    })
+
+
+</script>

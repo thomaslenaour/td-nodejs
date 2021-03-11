@@ -28,9 +28,7 @@ router.patch(
   ],
   gameController.updateGame
 )
-router.delete('/:id', (req, res, next) => {
-  console.log('DELETE /games/{id}')
-})
+router.delete('/:id', gameController.deleteGame)
 
 router.use('/', gamePlayerRoutes)
 router.use('/', shotRoutes)

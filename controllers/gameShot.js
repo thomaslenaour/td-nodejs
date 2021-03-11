@@ -2,6 +2,7 @@ const ThreeHundredAndOne = require('../engine/gamemodes/301')
 const AroundTheWorld = require('../engine/gamemodes/around-the-world')
 const Game = require('../models/game')
 const GamePlayer = require('../models/gamePlayer')
+const Player = require('../models/player')
 const HttpError = require('../models/http-error')
 
 const createShot = async (req, res, next) => {
@@ -91,19 +92,37 @@ const createShot = async (req, res, next) => {
   }
 
   game.currentPlayerId = currentGame.currentPlayer.id
+
+  if (currentGame.status === 'ended') {
+    game.status = 'ended'
+
+    currentGame.gamePlayers.forEach(async (gamePlayer) => {
+      const { playerId } = gamePlayer
+
+      let player
+      try {
+        player = await Player.findById(playerId)
+      } catch (err) {
+        console.error(err)
+      }
+
+      if (gamePlayer.rank === 1) player.gameWin++
+      else player.gameLost++
+
+      try {
+        await player.save()
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde ...')
+      }
+    })
+
+    console.log(game.gamePlayers)
+  }
+
   try {
     await game.save()
   } catch (err) {
     console.error(err)
-  }
-
-  if (currentGame.status === 'ended') {
-    game.status = 'ended'
-    try {
-      await game.save()
-    } catch (err) {
-      console.error(err)
-    }
   }
 
   return res.format({

@@ -1,7 +1,6 @@
 const { validationResult } = require('express-validator')
 
 const HttpError = require('../models/http-error')
-const Player = require('../models/player')
 const Game = require('../models/game')
 const GamePlayer = require('../models/gamePlayer')
 const AroundTheWorld = require('../engine/gamemodes/around-the-world')
@@ -323,6 +322,25 @@ const showGameForm = async (req, res, next) => {
   })
 }
 
+const deleteGame = async (req, res, next) => {
+  const { id } = req.params
+
+  try {
+    await GamePlayer.deleteMany({ gameId: id })
+  } catch (error) {
+    console.error(error)
+  }
+
+  try {
+    await Game.findByIdAndDelete(id)
+  } catch (error) {
+    console.error(error)
+  }
+
+  res.status(204).json()
+}
+
+exports.deleteGame = deleteGame
 exports.showGames = showGames
 exports.createGame = createGame
 exports.showGame = showGame
