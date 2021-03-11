@@ -3,7 +3,43 @@
         <h1 class="mb-5">Partie {{ game.name }}</h1>
 
         <div class="grid grid-cols-5 gap-6">
-            <div class="col-span-4">
+            <div class="col-span-1 p-5 border border-gray-200 rounded-md">
+                <h2 class="font-bold text-2xl mb-5">Joueurs</h2>
+                <ul class="list-disc list-inside mb-3">
+                    <h3 class="font-bold text-xl">En jeu</h3>
+                    {{#each players}}
+                        {{#ifEquals this.inGame true}}
+                        <li>{{this.playerId.name}} <span class="italic">({{this.score}} points)</span></li>
+                        {{/ifEquals}}
+                    {{/each}}
+                </ul>
+                <ul class="list-disc list-inside{{#ifEquals game.status 'draft'}} mb-5{{/ifEquals}}">
+                    <h3 class="font-bold text-xl">Hors jeu</h3>
+                    {{#each players}}
+                        {{#ifEquals this.inGame false}}
+                        <li>{{this.playerId.name}}</li>
+                        {{/ifEquals}}
+                    {{/each}}
+                </ul>
+                {{#ifEquals game.status 'draft'}}<a href="/games/{{game.id}}/players" class="text-indigo-500 block mb-5">Ajouter / Supprimer des joueurs</a>{{/ifEquals}}
+                {{#ifEquals game.status 'draft'}}<a href="/games/{{game.id}}/edit" class="text-indigo-500 block">Modifier la partie</a>{{/ifEquals}}
+            </div>
+            <div class="col-span-3">
+                {{#ifEquals game.status 'draft'}}
+                    <h2 class="font-medium text-center text-3xl mb-10">
+                        La partie n'est pas encore démarrée
+                    </h2>
+                {{/ifEquals}}
+                {{#ifEquals game.status 'started'}}
+                    <h2 class="font-medium text-center text-3xl mb-10">
+                        C'est au joueur <a href="/players/{{game.currentPlayerId.id}}" class="text-indigo-500">{{game.currentPlayerId.playerId.name}}</a> de jouer. Il lui reste <span class="text-indigo-500">{{game.currentPlayerId.remainingShots}}</span> coup(s)
+                    </h2>
+                {{/ifEquals}}
+                {{#ifEquals game.status 'ended'}}
+                    <h2 class="font-medium text-center text-red-500 text-3xl mb-10">
+                        La partie est terminée
+                    </h2>
+                {{/ifEquals}}
                 <div class="flex justify-center">
                     <img src="/assets/images/target.svg" usemap="#image-map">
                     <map name="image-map">
@@ -96,21 +132,22 @@
                 </div>
             </div>
             <div class="col-span-1 p-5 border border-gray-200 rounded-md">
-                <h2 class="font-bold text-2xl mb-5">Joueurs</h2>
-                <ul class="list-disc list-inside{{#ifEquals game.status 'draft'}} mb-5{{/ifEquals}}">
-                    {{#each players}}
-                        <li>{{this.playerId.name}}</li>
+                <h2 class="font-bold text-2xl mb-5">Classement</h2>
+                <ol class="list-inside list-decimal">
+                    {{#each rankingPlayers}}
+                        <li
+                            {{#ifEquals this.rank 1}} class="text-yellow-400 font-bold"{{/ifEquals}}
+                            {{#ifEquals this.rank 2}} class="text-gray-500 font-bold"{{/ifEquals}}
+                            {{#ifEquals this.rank 3}} class="text-yellow-700 font-bold"{{/ifEquals}}
+                        >
+                            {{this.playerId.name}}
+                        </li>
                     {{/each}}
-                </ul>
-                {{#ifEquals game.status 'draft'}}<a href="/games/{{game.id}}/players" class="text-indigo-500">Ajouter / Supprimer des joueurs</a>{{/ifEquals}}
-                {{#ifEquals game.status 'started'}}
-                    <h2 class="font-medium text-xl mt-10">
-                        C'est au joueur <a href="/players/{{game.currentPlayerId.id}}" class="text-indigo-500">{{game.currentPlayerId.playerId.name}}</a> de jouer. Il lui reste <span class="text-indigo-500">{{game.currentPlayerId.remainingShots}}</span> coups
-                    </h2>
-                {{/ifEquals}}
+                </ol>
             </div>
         </div>
     </div>
+    {{#if game.currentPlayerId}}
     <script>
         const createShot = async (id, objectRequest) => {
             let response
@@ -146,4 +183,5 @@
             })
         })
     </script>
+    {{/if}}
 </section>

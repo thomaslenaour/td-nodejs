@@ -77,10 +77,11 @@ class GameMode {
     const isFinished =
       this.gamePlayers.filter((player) => player.rank === null).length === 1
 
-    if (isFinished)
-      this.gamePlayers.find(
-        (player) => player.rank === null
-      ).rank = this.gamePlayers.length
+    if (isFinished) {
+      const lastPlayer = this.gamePlayers.find((player) => player.rank === null)
+      lastPlayer.rank = this.gamePlayers.length
+      lastPlayer.inGame = false
+    }
 
     return isFinished
   }

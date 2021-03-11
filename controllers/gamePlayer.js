@@ -183,7 +183,7 @@ const createGamePlayer = async (req, res, next) => {
 
   return res.format({
     json: () => res.status(204),
-    html: () => res.redirect(302, `/games/${id}/players`),
+    html: () => res.redirect(302, `/games/${id}`),
   })
 }
 

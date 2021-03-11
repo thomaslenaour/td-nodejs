@@ -1,6 +1,7 @@
 <section>
     <div class="main-container">
-        <h1 class="mb-5">Liste des joueurs</h1>
+        <a href="/games/{{game.id}}">&larr; Revenir à la partie</a>
+        <h1 class="my-5">Liste des joueurs</h1>
 
         <h2 class="font-bold text-2xl mb-5">Supprimer des joueurs</h2>
         <form id="form-gameplayer-delete" action="/games/{{game.id}}/players" method="POST" class="mb-5">
@@ -59,7 +60,7 @@
 
             deletePlayers('{{game.id}}', queryParams)
                 .then(response => {
-                    location.reload()
+                    location.href = '/games/{{game.id}}'
                 })
                 .catch(response => console.error('Erreur lors de la requête'))
         })

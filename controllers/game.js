@@ -224,7 +224,7 @@ const updateGame = async (req, res, next) => {
   return res.format({
     json: () =>
       res.status(200).json({ game: game.toObject({ getters: true }) }),
-    html: () => res.redirect(302, `/games/${game._id}`),
+    html: () => res.redirect(302, `/games/${id}`),
   })
 }
 
@@ -279,6 +279,10 @@ const showGame = async (req, res, next) => {
         players: playersInGame.map((player) =>
           player.toObject({ getters: true })
         ),
+        rankingPlayers: playersInGame
+          .filter((player) => player.rank !== null)
+          .map((player) => player.toObject({ getters: true }))
+          .sort((a, b) => a.rank - b.rank),
       }),
   })
 }

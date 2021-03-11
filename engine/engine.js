@@ -7,9 +7,9 @@ const players = [
     playerId: 1,
     gameId: 1,
     remainingShots: 3,
-    score: 301,
+    score: 2,
     rank: null,
-    order: null,
+    order: 0,
     inGame: true,
     createdAt: Date.now(),
   },
@@ -18,9 +18,9 @@ const players = [
     playerId: 2,
     gameId: 1,
     remainingShots: 3,
-    score: 301,
+    score: 19,
     rank: null,
-    order: null,
+    order: 2,
     inGame: true,
     createdAt: Date.now(),
   },
@@ -29,25 +29,22 @@ const players = [
     playerId: 3,
     gameId: 1,
     remainingShots: 3,
-    score: 301,
+    score: 19,
     rank: null,
-    order: null,
+    order: 1,
     inGame: true,
     createdAt: Date.now(),
   },
 ]
 
-const myGameMode = new ThreeHundredAndOne('Partie 1')
+const myGameMode = new AroundTheWorld('Partie 1')
 
-myGameMode.addPlayer(players[0])
-myGameMode.addPlayer(players[1])
-myGameMode.addPlayer(players[2])
-myGameMode.setPlayersOrder()
+myGameMode.gamePlayers = players
 myGameMode.startGame()
+myGameMode.setPlayersOrder()
 
-myGameMode.shot(10, 2)
-myGameMode.shot(18, 3)
-myGameMode.shot(10, 1)
-myGameMode.shot(10, 1)
+myGameMode.shot(20)
 
 console.log(myGameMode.gamePlayers)
+console.log('======================')
+console.log(myGameMode.currentPlayer)

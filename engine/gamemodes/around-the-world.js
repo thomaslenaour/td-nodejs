@@ -16,12 +16,16 @@ class AroundTheWorld extends GameMode {
 
     if (this.isFinished()) {
       this.status = 'ended'
-    }
-
-    if (!this.isFinished) {
+    } else {
       this.currentPlayer.remainingShots--
-      if (this.currentPlayer.remainingShots === 0) {
-        this.currentPlayer.remainingShots = 3
+      if (
+        this.currentPlayer.remainingShots === 0 ||
+        this.currentPlayer.rank !== null
+      ) {
+        if (this.currentPlayer.remainingShots === 0) {
+          this.currentPlayer.remainingShots = 3
+        }
+
         this.setCurrentPlayer(this.currentPlayer.order + 1)
       }
     }

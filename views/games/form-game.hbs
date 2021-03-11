@@ -1,12 +1,11 @@
 <section>
     <div class="main-container">
-        <h1 class="mb-5">
-            {{#if game}}
-            Modification de la partie : {{game.name}}
-            {{else}}
-            Création d'une nouvelle partie
-            {{/if}}
-        </h1>
+        {{#if game}}
+        <a href="/games/{{game.id}}">&larr; Revenir à la partie</a>
+        <h1 class="my-5">Modification de la partie : {{game.name}}</h1>
+        {{else}}
+        <h1 class="mb-5">Création d'une nouvelle partie</h1>
+        {{/if}}
         
         <form id="form-game" action="/games{{#if game}}/{{game.id}}{{/if}}" method="POST" class="text-sm">
             <div class="flex flex-col mb-3">

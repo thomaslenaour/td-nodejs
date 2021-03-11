@@ -73,10 +73,12 @@ const createShot = async (req, res, next) => {
 
   currentGame.status = game.status
   currentGame.gamePlayers = gamePlayers
+  currentGame.rankCounter = currentGame.gamePlayers.reduce((acc, val) =>
+    acc.rank > val.rank ? acc : val
+  ).rank
   currentGame.currentPlayer = currentGame.gamePlayers.find(
     (gamePlayer) => gamePlayer.order === game.currentPlayerId.order
   )
-  const isLastShot = currentGame.currentPlayer.remainingShots === 1
 
   currentGame.shot(sector, multiplicator)
 
@@ -88,13 +90,11 @@ const createShot = async (req, res, next) => {
     console.error(err)
   }
 
-  if (isLastShot) {
-    game.currentPlayerId = currentGame.currentPlayer.id
-    try {
-      await game.save()
-    } catch (err) {
-      console.error(err)
-    }
+  game.currentPlayerId = currentGame.currentPlayer.id
+  try {
+    await game.save()
+  } catch (err) {
+    console.error(err)
   }
 
   if (currentGame.status === 'ended') {
