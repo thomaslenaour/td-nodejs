@@ -18,8 +18,6 @@ router.patch(
   [body('name').not().isEmpty(), body('email').normalizeEmail().isEmail()],
   playerController.updateUser
 )
-router.delete('/:id', (req, res, next) => {
-  console.log('DELETE /players/{id}')
-})
+router.delete('/:id', playerController.deletePlayer)
 
 module.exports = router

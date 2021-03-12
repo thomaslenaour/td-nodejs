@@ -21,7 +21,7 @@
                     <div>
                         <div class="flex items-center space-x-2 text-sm tracking-tight">
                             <a href="/players/{{this.id}}/edit" class="hover:text-indigo-500">Modifier</a>
-                            <a href="#" class="hover:text-indigo-500">Supprimer</a>
+                            <button data-id="{{this.id}}" class="hover:text-indigo-500 delete-player-button">Supprimer</button>
                         </div>
                     </div>
                 </div>
@@ -31,3 +31,37 @@
         </div>
     </div>
 </section>
+
+{{#javascripts}}
+<script>
+
+    const deletePlayer = async (id) => {
+        let response
+
+        try {
+            response = await fetch(`/players/${id}`, {
+                method: 'DELETE'
+            });
+        } catch (error) {
+            console.error(error)
+        }
+        return response.ok ? true : false
+    }
+
+    const deleteButtons = document.querySelectorAll('.delete-player-button');
+
+    deleteButtons.forEach((deleteButton) => {
+
+        deleteButton.addEventListener('click', (event) => {
+            event.preventDefault()
+
+            deletePlayer(deleteButton.dataset.id)
+            .then(response => {location.href = `/players`})
+            .catch(response => console.error('Erreur lors de la requête'))
+        })
+
+    })
+
+
+</script>
+{{/javascripts}}

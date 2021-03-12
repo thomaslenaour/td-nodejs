@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator')
 
 const HttpError = require('../models/http-error')
 const Player = require('../models/player')
+const GamePlayer = require('../models/gamePlayer')
 
 const showPlayers = async (req, res, next) => {
   let players
@@ -193,8 +194,62 @@ const showPlayerForm = async (req, res, next) => {
   })
 }
 
+const deletePlayer = async (req, res, next) => {
+  const { id } = req.params
+
+  let gamePlayers
+  try {
+    gamePlayers = await GamePlayer.find({ playerId: id }).populate('gameId')
+  } catch (error) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Impossible de récupérer les données des GamePlayers',
+            'NOT_FOUND',
+            404
+          )
+        ),
+      html: () => res.render('players/new'),
+    })
+  }
+
+  let isInGame = false
+  if (gamePlayers) {
+    for (let i = 0; i < gamePlayers.length; i++) {
+      if (gamePlayers[i].gameId.status !== 'draft') {
+        isInGame = true
+        break
+      }
+    }
+  }
+
+  if (isInGame) {
+    return res.format({
+      json: () =>
+        next(
+          new HttpError(
+            'Impossible de supprimer le joueur',
+            'PLAYER_NOT_DELETABLE',
+            410
+          )
+        ),
+      html: () => res.redirect(302, '/players'),
+    })
+  }
+
+  try {
+    await Player.findByIdAndDelete(id)
+  } catch (error) {
+    console.error(error)
+  }
+
+  return res.status(204).json()
+}
+
 exports.showPlayers = showPlayers
 exports.createPlayer = createPlayer
 exports.getPlayer = getPlayer
 exports.showPlayerForm = showPlayerForm
 exports.updateUser = updateUser
+exports.deletePlayer = deletePlayer
