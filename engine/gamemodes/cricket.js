@@ -4,22 +4,58 @@ const redisClient = require('../../app')
 class Cricket extends GameMode {
   constructor(name) {
     super(name)
-    this.sector = [15, 16, 17, 18, 19, 20, 25, 50]
+    this.sector = Array.from({ length: 20 }, (_, i) => i + 1).concat([25, 50])
+    this.validSector = [15, 16, 17, 18, 19, 20, 25, 50]
   }
 
   async shot(sector, multiplicator) {
     this.isStarted()
     this.isValidShot(sector, multiplicator)
 
-    let data
+    if (this.validSector.includes(sector)) {
+      let state
+      try {
+        state = await this.getDataFromRedis(this.id)
+      } catch (error) {
+        console.error(error)
+      }
 
-    try {
-      data = await this.getDataFromRedis('ddddd')
-    } catch (error) {
-      console.error(error)
+      if (!state) {
+        this.initState()
+
+        try {
+          state = await this.getDataFromRedis(this.id)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      const stateSector = this.getStateSector(sector, state)
+
+      if (stateSector.open) {
+        if (stateSector.players[this.currentPlayer.id] < 3) {
+          stateSector.players[this.currentPlayer.id] += multiplicator
+        }
+
+        if (!stateSector.owner) {
+          if (stateSector.players[this.currentPlayer.id] >= 3) {
+            stateSector.owner = this.currentPlayer.id
+          }
+
+          this.currentPlayer.score += sector * multiplicator
+        }
+
+        if (stateSector.owner === this.currentPlayer.id) {
+          this.currentPlayer.score += sector * multiplicator
+        }
+      }
+
+      if (Object.values(stateSector.players).every((value) => value >= 3)) {
+        stateSector.open = false
+      }
+
+      this.setState(state)
     }
-
-    console.log(data)
 
     if (this.isFinished()) {
       this.status = 'ended'
@@ -67,6 +103,93 @@ class Cricket extends GameMode {
         resolve()
       })
     })
+  }
+
+  initState() {
+    const players = Object.assign(
+      {},
+      ...this.gamePlayers.map((gamePlayer) => ({
+        [gamePlayer.id]: 0,
+      }))
+    )
+    try {
+      const state = {
+        fifteen: {
+          players,
+          open: true,
+          owner: null,
+        },
+        sixteen: {
+          players,
+          open: true,
+          owner: null,
+        },
+        seventeen: {
+          players,
+          open: true,
+          owner: null,
+        },
+        eighteen: {
+          players,
+          open: true,
+          owner: null,
+        },
+        nineteen: {
+          players,
+          open: true,
+          owner: null,
+        },
+        twenty: {
+          players,
+          open: true,
+          owner: null,
+        },
+        twentyFive: {
+          players,
+          open: true,
+          owner: null,
+        },
+        fifty: {
+          players,
+          open: true,
+          owner: null,
+        },
+      }
+
+      redisClient.setex(this.id, 3600, JSON.stringify(state))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  setState(newState) {
+    console.log(newState)
+    try {
+      redisClient.setex(this.id, 3600, JSON.stringify(newState))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  getStateSector(sector, state) {
+    switch (sector) {
+      case 15:
+        return state.fifteen
+      case 16:
+        return state.sixteen
+      case 17:
+        return state.seventeen
+      case 18:
+        return state.eighteen
+      case 19:
+        return state.nineteen
+      case 20:
+        return state.twenty
+      case 25:
+        return state.twentyFive
+      default:
+        return state.fifty
+    }
   }
 }
 

@@ -4,6 +4,7 @@ class GameMode {
       throw new TypeError('GameMode ne peut pas être instancier directement')
     }
 
+    this.id = 1
     this.name = name
     this.status = 'draft'
     this.createdAt = Date.now()

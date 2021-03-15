@@ -4,6 +4,7 @@ const Game = require('../models/game')
 const GamePlayer = require('../models/gamePlayer')
 const Player = require('../models/player')
 const HttpError = require('../models/http-error')
+const Cricket = require('../engine/gamemodes/cricket')
 
 const createShot = async (req, res, next) => {
   const { id } = req.params
@@ -68,7 +69,7 @@ const createShot = async (req, res, next) => {
       currentGame = new ThreeHundredAndOne(game.name)
       break
     default:
-      currentGame = null
+      currentGame = new Cricket(game.name)
       break
   }
 
@@ -81,7 +82,11 @@ const createShot = async (req, res, next) => {
     (gamePlayer) => gamePlayer.order === game.currentPlayerId.order
   )
 
-  currentGame.shot(sector, multiplicator)
+  if (game.mode === 'cricket') {
+    await currentGame.shot(sector, multiplicator)
+  } else {
+    currentGame.shot(sector, multiplicator)
+  }
 
   try {
     gamePlayers.forEach(async (gamePlayer) => {

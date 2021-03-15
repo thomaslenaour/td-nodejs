@@ -5,6 +5,7 @@ const Game = require('../models/game')
 const GamePlayer = require('../models/gamePlayer')
 const AroundTheWorld = require('../engine/gamemodes/around-the-world')
 const ThreeHundredAndOne = require('../engine/gamemodes/301')
+const Cricket = require('../engine/gamemodes/cricket')
 
 const showGames = async (req, res, next) => {
   let games
@@ -178,7 +179,7 @@ const updateGame = async (req, res, next) => {
         currentGame = new ThreeHundredAndOne(game.name)
         break
       default:
-        currentGame = null
+        currentGame = new Cricket(game.name)
         break
     }
 
