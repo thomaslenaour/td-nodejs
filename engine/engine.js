@@ -1,4 +1,5 @@
 const AroundTheWorld = require('./gamemodes/around-the-world')
+const Cricket = require('./gamemodes/cricket')
 const ThreeHundredAndOne = require('./gamemodes/301')
 
 const players = [
@@ -37,14 +38,14 @@ const players = [
   },
 ]
 
-const myGameMode = new AroundTheWorld('Partie 1')
+const myGameMode = new Cricket('Partie 1')
 
 myGameMode.gamePlayers = players
 myGameMode.startGame()
 myGameMode.setPlayersOrder()
 
-myGameMode.shot(20)
+myGameMode.shot(20, 2)
 
-console.log(myGameMode.gamePlayers)
-console.log('======================')
-console.log(myGameMode.currentPlayer)
+// console.log(myGameMode.gamePlayers)
+// console.log('======================')
+// console.log(myGameMode.currentPlayer)
