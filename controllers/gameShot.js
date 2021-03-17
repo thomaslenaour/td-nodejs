@@ -73,6 +73,7 @@ const createShot = async (req, res, next) => {
       break
   }
 
+  currentGame.id = game.id
   currentGame.status = game.status
   currentGame.gamePlayers = gamePlayers
   currentGame.rankCounter = currentGame.gamePlayers.reduce((acc, val) =>

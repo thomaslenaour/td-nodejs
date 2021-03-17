@@ -53,6 +53,12 @@ class Cricket extends GameMode {
       }
 
       this.setState(state)
+
+      if (this.checkWin(state)) {
+        this.rankCounter++
+        this.currentPlayer.rank = this.rankCounter
+        this.currentPlayer.inGame = false
+      }
     }
 
     if (this.isFinished()) {
@@ -72,7 +78,17 @@ class Cricket extends GameMode {
     }
   }
 
-  checkWin(currentPlayer) {}
+  checkWin(state) {
+    const allSectorsValid = Object.keys(state).every(
+      (sector) => state[sector].players[this.currentPlayer.id] >= 3
+    )
+
+    const highScore = this.gamePlayers.every(
+      (gamePlayer) => this.currentPlayer.score >= gamePlayer.score
+    )
+
+    return allSectorsValid && highScore
+  }
 
   isValidShot(sector, multiplicator) {
     if (!this.sector.includes(sector))
