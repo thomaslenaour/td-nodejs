@@ -1,13 +1,13 @@
-const redis = require('redis')
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
+const redis = require('redis')
 const hbs = require('hbs')
 
 const HttpError = require('./models/http-error')
 
 const app = express()
-const redisClient = redis.createClient(process.env.REDIS_PORT || 6379)
+exports.redisClient = redis.createClient(process.env.REDIS_PORT || 6379)
 
 const gameRoutes = require('./routers/game')
 const playerRoutes = require('./routers/player')
@@ -76,5 +76,3 @@ mongoose
   )
   .then(() => app.listen(process.env.PORT || 5000))
   .catch((err) => console.log(err))
-
-module.exports = redisClient

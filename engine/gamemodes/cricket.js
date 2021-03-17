@@ -1,5 +1,5 @@
 const GameMode = require('../gamemode')
-const redisClient = require('../../app')
+const { redisClient } = require('../../app')
 
 class Cricket extends GameMode {
   constructor(name) {
@@ -43,9 +43,7 @@ class Cricket extends GameMode {
           }
 
           this.currentPlayer.score += sector * multiplicator
-        }
-
-        if (stateSector.owner === this.currentPlayer.id) {
+        } else if (stateSector.owner === this.currentPlayer.id) {
           this.currentPlayer.score += sector * multiplicator
         }
       }
