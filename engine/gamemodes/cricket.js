@@ -33,16 +33,21 @@ class Cricket extends GameMode {
       const stateSector = this.getStateSector(sector, state)
 
       if (stateSector.open) {
-        if (stateSector.players[this.currentPlayer.id] < 3) {
+        const numberTimes = stateSector.players[this.currentPlayer.id] || 0
+
+        let wasBeforeThree = false
+        if (numberTimes < 3) {
           stateSector.players[this.currentPlayer.id] += multiplicator
+          wasBeforeThree = true
         }
 
         if (!stateSector.owner) {
           if (stateSector.players[this.currentPlayer.id] >= 3) {
             stateSector.owner = this.currentPlayer.id
+            this.currentPlayer.score +=
+              sector *
+              (wasBeforeThree ? numberTimes + multiplicator - 3 : multiplicator)
           }
-
-          this.currentPlayer.score += sector * multiplicator
         } else if (stateSector.owner === this.currentPlayer.id) {
           this.currentPlayer.score += sector * multiplicator
         }
